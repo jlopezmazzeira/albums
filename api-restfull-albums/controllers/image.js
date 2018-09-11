@@ -1,91 +1,109 @@
 'use strict'
 
+var path = require('path');
 var Album = require('../models/album');
 var Image = require('../models/image');
 
-function test(req, res) {
-  res.status(200)
-      .send({message: 'prueba de ruta'});
-}
-/*function getAlbum(req, res) {
+function getImage(req, res) {
+  var imageId = req.params.id;
+
+  Image.findById(imageId, (err, image) => {
+    if (err) {
+      res.status(500)
+          .send({message: 'Error en el servidor'});
+    } else {
+      if (!image) {
+        res.status(404)
+            .send({message: 'La imagen no existe'});
+      } else {
+        Album.populate(image, {path: 'album'}, (err, image) => {
+          if (err) {
+            res.status(500)
+                .send({message: 'Error en el servidor'});
+          } else {
+            res.status(200)
+                .send({image});
+          }
+        });
+      }
+
+    }
+  });
+
+};
+
+function getImages(req, res) {
   var albumId = req.params.id;
+  if (!albumId) {
+    var find = Image.find({}).sort('-title');
+  } else {
+    var find = Image.find({album: albumId}).sort('-title');
+  }
 
-  Album.findById(albumId, (err, album) => {
+  find.exec((err, images) => {
     if (err) {
       res.status(500)
-          .send({message: 'Error al obtener el albúm'});
+          .send({message: 'Error en el servidor'});
     } else {
-      if (!album) {
+      if (!images) {
         res.status(404)
-            .send({message: 'El albúm no existe'});
+            .send({message: 'No hay imagenes'});
       } else {
-        res.status(200)
-            .send({album});
-      }
-
-    }
-  });
-
-};
-
-function getAlbums(req, res) {
-  Album.find({}).sort('-_id').exec((err, albums) => {
-    if (err) {
-      res.status(500)
-          .send({message: 'Error al mostrar los albums'});
-    } else {
-      if (!albums) {
-        res.status(404)
-            .send({message: 'No hay albums'});
-      } else {
-        res.status(200)
-            .send({albums});
+        Album.populate(images, {path: 'album'}, (err, images) => {
+          if (err) {
+            res.status(500)
+                .send({message: 'Error en el servidor'});
+          } else {
+            res.status(200)
+                .send({images});
+          }
+        });
       }
     }
 
   });
-
 };
 
-function saveAlbum(req, res) {
-  var album = new Album();
+function saveImage(req, res) {
+  var image = new Image();
   var params = req.body;
 
-  album.title = params.title;
-  album.description = params.description;
+  image.title = params.title;
+  image.picture = null;
+  image.album = params.album;
 
-  album.save((err, albumStored) => {
+  image.save((err, imageStored) => {
     if (err) {
       res.status(500)
           .send({message: 'Error en la petición'});
     } else {
-      if (!albumStored) {
+      if (!imageStored) {
         res.status(404)
-            .send({message: 'El albúm no se ha podido guardar'});
+            .send({message: 'La imagen no se ha podido guardar'});
       } else {
         res.status(200)
-            .send({album: albumStored});
+            .send({image: imageStored});
       }
     }
 
   });
 };
 
-function updateAlbum(req, res) {
-  var albumId = req.params.id;
+function updateImage(req, res) {
+  var imageId = req.params.id;
   var update = req.body;
 
-  Album.findByIdAndUpdate(albumId, update, (err, albumUpdated) => {
+  Image.findByIdAndUpdate(imageId, update, (err, imageUpdated) => {
     if (err) {
       res.status(500)
           .send({message: 'Error en la petición'});
     } else {
-      if (!albumUpdated) {
+      if (!imageUpdated) {
         res.status(404)
-            .send({message: 'El albúm no se ha podido actualizar'});
+            .send({message: 'La imagen no se ha podido actualizar'});
       } else {
         res.status(200)
-            .send({album: albumUpdated});
+            .send({image: imageUpdated});
       }
     }
 
@@ -93,32 +111,77 @@ function updateAlbum(req, res) {
 
 };
 
-function deleteAlbum(req, res) {
-  var albumId = req.params.id;
+function deleteImage(req, res) {
+  var imageId = req.params.id;
 
-  Album.findByIdAndRemove(albumId, (err, albumRemoved) => {
+  Image.findByIdAndRemove(imageId, (err, imageRemoved) => {
     if (err) {
       res.status(500)
           .send({message: 'Error en la petición'});
     } else {
-      if (!albumRemoved) {
+      if (!imageRemoved) {
         res.status(404)
-            .send({message: 'El albúm no se ha podido actualizar'});
+            .send({message: 'La imagen no se ha podido eliminar'});
       } else {
         res.status(200)
-            .send({album: albumRemoved});
+            .send({image: imageRemoved});
       }
     }
 
   });
 
-};*/
+};
+
+function uploadImage(req, res) {
+  var imageId = req.params.id;
+  var filename = 'No subido...';
+
+  if (req.files) {
+    var file_path = req.files.image.path;
+    var file_split = file_path.split('\\');
+    var file_name = file_path[1];
+
+    Image.findByIdAndUpdate(imageId, {picture: file_name}, (err, imageUpdated) => {
+      if (err) {
+        res.status(500)
+            .send({message: 'Error en la petición'});
+      } else {
+        if (!imageUpdated) {
+          res.status(404)
+              .send({message: 'La imagen no se ha podido actualizar'});
+        } else {
+          res.status(200)
+              .send({image: imageUpdated});
+        }
+      }
+
+    });
+  } else {
+    res.status(200)
+        .send({message: 'No ha subido ninguna imagen'});
+  }
+}
+
+var fs = require('fs');
+function getImageFile(req, res) {
+    var imageFile = req.params.imageFile;
+    fs.exists('./uploads/'+imageFile, function(exists) {
+      if (exists) {
+        res.sendFile(path.resolve('./uploads/'+imageFile));
+      } else {
+        res.status(200)
+            .send({message: 'No existe la imagen'});
+      }
+    });
+
+}
 
 module.exports = {
-  test
-  /*getAlbum,
-  getAlbums,
-  saveAlbum,
-  updateAlbum,
-  deleteAlbum*/
+  getImage,
+  saveImage,
+  getImages,
+  updateImage,
+  deleteImage,
+  uploadImage,
+  getImageFile
 };

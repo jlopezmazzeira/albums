@@ -98,7 +98,7 @@ function deleteAlbum(req, res) {
     } else {
       if (!albumRemoved) {
         res.status(404)
-            .send({message: 'El albúm no se ha podido actualizar'});
+            .send({message: 'El albúm no se ha podido eliminar'});
       } else {
         res.status(200)
             .send({album: albumRemoved});
