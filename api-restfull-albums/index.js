@@ -9,7 +9,7 @@ mongoose.connect(url, { useNewUrlParser: true }, (err, res) => {
   if (err) throw err;
   else {
     app.listen(port,function() {
-        console.log(`Api restfull favoritos funcionando en http://localhost:${port}`);
+        console.log(`Api restfull álbumes funcionando en http://localhost:${port}`);
     });
   }
 });

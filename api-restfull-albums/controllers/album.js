@@ -8,11 +8,11 @@ function getAlbum(req, res) {
   Album.findById(albumId, (err, album) => {
     if (err) {
       res.status(500)
-          .send({message: 'Error al obtener el albúm'});
+          .send({message: 'Error al obtener el álbum'});
     } else {
       if (!album) {
         res.status(404)
-            .send({message: 'El albúm no existe'});
+            .send({message: 'El álbum no existe'});
       } else {
         res.status(200)
             .send({album});
@@ -27,11 +27,11 @@ function getAlbums(req, res) {
   Album.find({}).sort('-_id').exec((err, albums) => {
     if (err) {
       res.status(500)
-          .send({message: 'Error al mostrar los albums'});
+          .send({message: 'Error al mostrar los álbumes'});
     } else {
       if (!albums) {
         res.status(404)
-            .send({message: 'No hay albums'});
+            .send({message: 'No hay álbumes'});
       } else {
         res.status(200)
             .send({albums});
@@ -56,7 +56,7 @@ function saveAlbum(req, res) {
     } else {
       if (!albumStored) {
         res.status(404)
-            .send({message: 'El albúm no se ha podido guardar'});
+            .send({message: 'El álbum no se ha podido guardar'});
       } else {
         res.status(200)
             .send({album: albumStored});
@@ -77,7 +77,7 @@ function updateAlbum(req, res) {
     } else {
       if (!albumUpdated) {
         res.status(404)
-            .send({message: 'El albúm no se ha podido actualizar'});
+            .send({message: 'El álbum no se ha podido actualizar'});
       } else {
         res.status(200)
             .send({album: albumUpdated});
@@ -98,7 +98,7 @@ function deleteAlbum(req, res) {
     } else {
       if (!albumRemoved) {
         res.status(404)
-            .send({message: 'El albúm no se ha podido eliminar'});
+            .send({message: 'El álbum no se ha podido eliminar'});
       } else {
         res.status(200)
             .send({album: albumRemoved});
