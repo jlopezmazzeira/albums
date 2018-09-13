@@ -9,8 +9,8 @@
     </div>
     <p class="buttons">
       <a class="btn btn-ver" [routerLink]="['/album/', album._id]">Ver Álbum</a>
-      <a class="btn btn-default" href="#">Añadir Fotos</a>
-      <a class="btn btn-editar" [routerLink]="['/edit-album/', album._id]">Editar</a>
+      <a class="btn btn-default" [routerLink]="['/crear-image/', album._id]">Añadir Fotos</a>
+      <a class="btn btn-editar" [routerLink]="['/editar-album/', album._id]">Editar</a>
       <a class="btn btn-eliminar" (click)="onBorrarConfirm(album._id)">Eliminar</a>
     </p>
     <div class="seguro" *ngIf="confirmado == album._id">
