@@ -3,7 +3,7 @@
 var express = require('express');
 var ImageController = require('../controllers/image');
 var multipart = require('connect-multiparty');
-var multipartMiddelware = multipart({ multipartDir: './uploads' });
+var multipartMiddelware = multipart({ uploadDir: './uploads' });
 var api = express.Router();
 
 api.get('/image/:id', ImageController.getImage);

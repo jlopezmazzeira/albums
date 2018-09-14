@@ -33,7 +33,7 @@ function getImage(req, res) {
 };
 
 function getImages(req, res) {
-  var albumId = req.params.id;
+  var albumId = req.params.album;
   if (!albumId) {
     var find = Image.find({}).sort('-title');
   } else {
@@ -138,8 +138,8 @@ function uploadImage(req, res) {
 
   if (req.files) {
     var file_path = req.files.image.path;
-    var file_split = file_path.split('\\');
-    var file_name = file_path[1];
+    var file_split = file_path.split('/');
+    var file_name = file_split[1];
 
     Image.findByIdAndUpdate(imageId, {picture: file_name}, (err, imageUpdated) => {
       if (err) {

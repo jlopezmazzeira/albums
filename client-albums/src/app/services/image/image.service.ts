@@ -16,6 +16,11 @@ export class ImageService {
     this.url = GLOBAL.url;
   }
 
+  getApiUrl(segment = ''): string{
+    var url = this.url + segment;
+    return url;
+  }
+
   getImages(albumId = null){
     if(albumId == null){
       return this._http.get(this.url+'images')
@@ -52,7 +57,7 @@ export class ImageService {
   }
 
   deleteImage(id: string){
-    return this._http.delete(this.url+'album/'+id)
+    return this._http.delete(this.url+'image/'+id)
                      .pipe(map(res => res.json()));
   }
 }

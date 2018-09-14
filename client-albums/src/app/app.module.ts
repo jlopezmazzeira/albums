@@ -12,6 +12,7 @@ import { AlbumEditComponent } from './components/album-edit/album-edit.component
 
 import { ImageAddComponent } from './components/image-add/image-add.component';
 import { ImageEditComponent } from './components/image-edit/image-edit.component';
+import { ImageDetailComponent } from './components/image-detail/image-detail.component';
 
 import { AlbumService } from './services/album/album.service';
 import { ImageService } from './services/image/image.service';
@@ -24,7 +25,8 @@ import { ImageService } from './services/image/image.service';
     AlbumDetailComponent,
     AlbumEditComponent,
     ImageAddComponent,
-    ImageEditComponent
+    ImageEditComponent,
+    ImageDetailComponent
   ],
   imports: [
     BrowserModule,

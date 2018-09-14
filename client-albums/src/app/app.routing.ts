@@ -6,6 +6,7 @@ import { AlbumDetailComponent } from './components/album-detail/album-detail.com
 import { AlbumEditComponent } from './components/album-edit/album-edit.component';
 import { ImageAddComponent } from './components/image-add/image-add.component';
 import { ImageEditComponent } from './components/image-edit/image-edit.component';
+import { ImageDetailComponent } from './components/image-detail/image-detail.component';
 
 const appRoutes: Routes = [
   { path: '', component: AlbumListComponent },
@@ -14,6 +15,7 @@ const appRoutes: Routes = [
   { path: 'editar-album/:id', component: AlbumEditComponent},
   { path: 'crear-image/:album', component: ImageAddComponent},
   { path: 'editar-image/:id', component: ImageEditComponent},
+  { path: 'image/:id', component: ImageDetailComponent},
   { path: '**', component: AlbumListComponent }
 ];
 
